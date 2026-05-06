@@ -1,0 +1,128 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="module" style="padding: 18px; border-radius: 14px; background: #fff;">
+    <h1 style="margin-bottom: 16px;">تقارير المكتبة</h1>
+
+    <form method="get" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px;">
+        <div>
+            <label for="{{ form.period.id_for_label }}">الفترة</label>
+            {{ form.period }}
+        </div>
+        <div>
+            <label for="{{ form.date_from.id_for_label }}">من تاريخ</label>
+            {{ form.date_from }}
+        </div>
+        <div>
+            <label for="{{ form.date_to.id_for_label }}">إلى تاريخ</label>
+            {{ form.date_to }}
+        </div>
+        <div>
+            <label for="{{ form.output.id_for_label }}">نوع التصدير</label>
+            {{ form.output }}
+        </div>
+
+        <div style="grid-column: 1 / -1; display:flex; gap:10px; align-items:center;">
+            <button class="button default" type="submit">تنفيذ</button>
+            <a class="button" href="?period={{ request.GET.period|default:'month' }}&output=pdf">تصدير PDF</a>
+            <a class="button" href="?period={{ request.GET.period|default:'month' }}&output=xlsx">تصدير Excel</a>
+        </div>
+    </form>
+
+    {% if data %}
+    <div style="display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px;">
+        <div class="module" style="padding: 14px;"><strong>الكتب المضافة</strong><br>{{ data.summary.books_added }}</div>
+        <div class="module" style="padding: 14px;"><strong>الإعارات</strong><br>{{ data.summary.loans_created }}</div>
+        <div class="module" style="padding: 14px;"><strong>المسترجع</strong><br>{{ data.summary.returns_count }}</div>
+        <div class="module" style="padding: 14px;"><strong>المتأخر</strong><br>{{ data.summary.overdue_count }}</div>
+    </div>
+
+    <h2>ملخص سريع</h2>
+    <table class="adminlist" style="width:100%; margin-bottom:20px;">
+        <thead>
+            <tr>
+                <th>البند</th>
+                <th>العدد</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>إجمالي الأقسام</td><td>{{ data.summary.sections_total }}</td></tr>
+            <tr><td>الأقسام المضافة داخل الفترة</td><td>{{ data.summary.sections_added }}</td></tr>
+            <tr><td>إجمالي المؤلفين</td><td>{{ data.summary.authors_total }}</td></tr>
+            <tr><td>المؤلفون المضافون داخل الفترة</td><td>{{ data.summary.authors_added }}</td></tr>
+            <tr><td>إجمالي الكتب</td><td>{{ data.summary.books_total }}</td></tr>
+            <tr><td>إجمالي النسخ</td><td>{{ data.summary.copies_total }}</td></tr>
+            <tr><td>الإعارات السارية</td><td>{{ data.summary.active_loans }}</td></tr>
+            <tr><td>الكتب المتأخرة</td><td>{{ data.summary.overdue_count }}</td></tr>
+        </tbody>
+    </table>
+
+    <h2>حالات النسخ</h2>
+    <table class="adminlist" style="width:100%; margin-bottom:20px;">
+        <thead>
+            <tr>
+                <th>الحالة</th>
+                <th>العدد</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data.copies_status_counts %}
+                <tr>
+                    <td>{{ row.status }}</td>
+                    <td>{{ row.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>أحدث الكتب المضافة</h2>
+    <table class="adminlist" style="width:100%; margin-bottom:20px;">
+        <thead>
+            <tr>
+                <th>العنوان</th>
+                <th>القسم</th>
+                <th>الرف</th>
+                <th>رقم الأرشفة</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in data.books_detail|slice:":15" %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.section }}</td>
+                    <td>{{ book.shelf|default:"-" }}</td>
+                    <td>{{ book.archive_number }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>الإعارات الأخيرة</h2>
+    <table class="adminlist" style="width:100%;">
+        <thead>
+            <tr>
+                <th>الكتاب</th>
+                <th>النسخة</th>
+                <th>المستعير</th>
+                <th>الحالة</th>
+                <th>تاريخ الإعارة</th>
+                <th>الموعد</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in data.loans_detail|slice:":15" %}
+                <tr>
+                    <td>{{ loan.copy.book.title }}</td>
+                    <td>{{ loan.copy.copy_number }}</td>
+                    <td>{{ loan.borrower }}</td>
+                    <td>{{ loan.get_status_display }}</td>
+                    <td>{{ loan.loan_date }}</td>
+                    <td>{{ loan.due_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
