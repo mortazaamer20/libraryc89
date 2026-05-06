@@ -133,3 +133,8 @@ STATIC_URL = 'static/'
 
 
 REPORTS_PDF_FONT_PATH = BASE_DIR / "assets" / "fonts" / "DejaVuSans.ttf"
+
+
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
