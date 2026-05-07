@@ -34,6 +34,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django_filters",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "api",
+    
 ]
 
 MIDDLEWARE = [
@@ -138,3 +140,111 @@ REPORTS_PDF_FONT_PATH = BASE_DIR / "assets" / "fonts" / "DejaVuSans.ttf"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+JAZZMIN_SETTINGS = {
+    "site_title": "إدارة المكتبة",
+    "site_header": "نظام إدارة المكتبة",
+    "site_brand": "نظام ادارة المكتبة",
+    "site_logo": None,
+    "login_logo": None,
+    
+    "welcome_sign": "مرحباً بك في نظام إدارة المكتبة",
+
+    "copyright": "نظام إدارة المكتبة © 2026",
+
+    "search_model": [
+        "auth.User",
+        "api.Book",
+        "api.Author",
+        "api.LibrarySection",
+        "api.BookCopy",
+        "api.Loan",
+    ],
+
+    "topmenu_links": [
+        {
+            "name": "الرئيسية",
+            "url": "admin:index",
+            "permissions": ["auth.view_user"],
+        },
+        {
+            "name": "التقارير",
+            "url": "/admin/reports/",
+            "new_window": False,
+        },
+    ],
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "hide_apps": [],
+    "hide_models": [],
+
+    "order_with_respect_to": [
+        "api",
+        "api.book",
+        "api.bookcopy",
+        "api.author",
+        "api.librarysection",
+        "api.loan",
+    ],
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+
+        "api.Book": "fas fa-book",
+        "api.BookCopy": "fas fa-copy",
+        "api.Author": "fas fa-feather",
+        "api.LibrarySection": "fas fa-folder-open",
+        "api.Shelf": "fas fa-layer-group",
+        "api.BookFile": "fas fa-file-pdf",
+        "api.Loan": "fas fa-handshake",
+        "api.MemberProfile": "fas fa-user",
+    },
+
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-circle",
+
+    "related_modal_active": True,
+
+    "custom_css": None,
+    "custom_js": None,
+
+    "show_ui_builder": False,
+
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "api.book": "collapsible",
+        "api.loan": "single",
+    },
+}
+
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+
+    "navbar_small_text": False,
+    "footer_small_text": False,
+
+    "navbar_fixed": True,
+    "layout_boxed": False,
+
+    "sidebar_fixed": True,
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+
+    "sidebar_nav_child_indent": True,
+
+    "theme_colour": "navbar-dark",
+
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
